@@ -86,7 +86,7 @@ Vec2 FindIntersection(const Line& l1,const Line& l2)
     (l2.a * l1.c - l2.c * l1.a) /determinant};
 }
 
-Vec2 Intersect(const Ray& r1, const Ray& r2)
+Vec2 Reflect(const Ray& r1, const Ray& r2)
 {
   Line l1 = GetLineBy2Pts(r1.point, r1.point + r1.direction);
   Line l2 = GetLineBy2Pts(r2.point, r2.point + r2.direction);
