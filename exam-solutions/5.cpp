@@ -29,27 +29,27 @@ float DotProduct(Vec2 pt1, Vec2 pt2)
   return pt1.x * pt2.x + pt1.y * pt2.y;
 }
 
-Vec2 operator*(Vec2 pt, float a)
+Vec2 operator*(const Vec2& pt, float a)
 {
   return {pt.x * a, pt.y * a};
 }
 
-Vec2 operator*(float a, Vec2 pt)
+Vec2 operator*(float a, const Vec2& pt)
 {
   return {pt.x * a, pt.y * a};
 }
 
-Vec2 operator*(Vec2 pt1, Vec2 pt2)
+Vec2 operator*(const Vec2& pt1, const Vec2& pt2)
 {
   return {pt1.x * pt2.x, pt1.y * pt2.y};
 }
 
-Vec2 operator-(Vec2 pt1, Vec2 pt2)
+Vec2 operator-(const Vec2& pt1, const Vec2& pt2)
 {
   return {pt1.x - pt2.x, pt1.y - pt2.y};
 }
 
-Vec2 operator+(Vec2 pt1, Vec2 pt2)
+Vec2 operator+(const Vec2& pt1, const Vec2& pt2)
 {
   return {pt1.x + pt2.x, pt1.y + pt2.y};
 }
