@@ -1,6 +1,6 @@
-#include <iostream>
 #include <algorithm>
 #include <string>
+#include <fstream>
 
 static const int ALPHABET_SIZE = 255;
 
@@ -8,7 +8,7 @@ struct Trie
 {
 	struct Node
 	{
-		Node *children[ALPHABET_SIZE] = {nullptr};
+		Node *children[ALPHABET_SIZE] = { nullptr };
 		bool leaf = false;
 	};
 
@@ -35,7 +35,8 @@ struct Trie
 		if (!*str) {
 			depth = std::max(currentDepth, depth);
 			n->leaf = true;
-		} else {
+		}
+		else {
 			insert(str + 1, n->children[index(*str)]);
 		}
 	}
@@ -78,16 +79,17 @@ public:
 	}
 };
 
-
 int main() {
 	std::string inp;
 	Trie t;
 
-	while (std::cin >> inp) {
+	std::ifstream inputFile("inputFile.txt");
+	while (inputFile >> inp) {
 		t.insert(inp.c_str());
 	}
-	std::cout << "-----\n";
-	t.writeSorted(std::cout);
-	getchar();
+	inputFile.close();
+
+	std::ofstream outputFile("outputFile.txt");
+	t.writeSorted(outputFile);
 	return 0;
 }
