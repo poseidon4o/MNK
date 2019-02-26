@@ -36,10 +36,14 @@ struct Timer {
 	}
 };
 
+int getPerWorkers(int size, int workers) {
+	return ((size - 1) / workers) + 1;
+}
+
 /// The actual function doing work
 /// doing more work here will show the bigger difference between single and multi-threaded code
 int doWork(int input) {
-	// return sqrt(input);
+	return sqrt(input) * log10(input) * pow(input, 3.14);
 	return input;
 }
 
@@ -76,7 +80,7 @@ int64_t sumThreadsLock(const int *arr, int size, int threadCount) {
 	int64_t result = 0;
 	std::mutex mtx;
 
-	const int perWorker = size / threadCount;
+	const int perWorker = getPerWorkers(size, threadCount);
 	for (int c = 0; c < workers.size(); c++) {
 		const int *start = arr + c * perWorker;
 		const int itemCount = std::min<int>(perWorker, arr + size - start);
@@ -103,7 +107,7 @@ int64_t sumThreadsAtomic(const int *arr, int size, int threadCount) {
 	std::vector<std::thread> workers(threadCount);
 	std::atomic_int64_t result = 0;
 
-	const int perWorker = size / threadCount;
+	const int perWorker = getPerWorkers(size, threadCount);
 	for (int c = 0; c < workers.size(); c++) {
 		const int *start = arr + c * perWorker;
 		const int itemCount = std::min<int>(perWorker, arr + size - start);
@@ -124,7 +128,7 @@ int64_t sumThreads(const int *arr, int size, int threadCount) {
 	std::vector<std::thread> workers(threadCount);
 	std::vector<int64_t> results(threadCount, 0);
 
-	const int perWorker = size / threadCount;
+	const int perWorker = getPerWorkers(size, threadCount);
 	for (int c = 0; c < workers.size(); c++) {
 		const int *start = arr + c * perWorker;
 		const int itemCount = std::min<int>(perWorker, arr + size - start);
@@ -153,10 +157,11 @@ int64_t test(int testSize) {
 	Timer t;
 
 	int64_t total = 0;
+	int64_t sequentialResult = 0;
 	t.start();
 	for (int c = 0; c < tries; c++) {
-		const int64_t result = callSequential(&data[0], count);
-		total += result;
+		sequentialResult = callSequential(&data[0], count);
+		total += sequentialResult;
 	}
 	const float seqTime = t.elapsedMS() / tries;
 	printf("sequential count [%d MB] for [%f ms] \n", testSize, seqTime);
@@ -174,6 +179,10 @@ int64_t test(int testSize) {
 			t.start();
 			for (int c = 0; c < tries; c++) {
 				const int64_t runResult = threadedFunctions[r](&data[0], count, thCount);
+				if (sequentialResult != runResult) {
+					printf("function [%s] produced wrong result\n", names[r]);
+					exit(-1);
+				}
 				total += runResult;
 			}
 			const float parallelTime = t.elapsedMS() / tries;
@@ -194,7 +203,7 @@ int main() {
 	int64_t sum = 0;
 
 	// sample sizes in MB to test with
-	const int testSizes[] = {1, 2, 5, 10, 100, 500, 1000};
+	const int testSizes[] = {1, 2, 5, 10, 100, 500};
 
 	for (int size : testSizes) {
 		sum += test(size);
