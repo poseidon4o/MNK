@@ -15,18 +15,18 @@ struct LevelDescription {
     float length;
     /// Total height of the level
     float height;
-    struct Pilon {
+    struct Pylon {
         /// Center is between [0, 0] and [width, height]
-        /// Refers to the point in the middle of the gap between top and bottom part of the pilon
+        /// Refers to the point in the middle of the gap between top and bottom part of the pylon
         Point2d center;
-        /// Width of the pilon
+        /// Width of the pylon
         float width;
-        /// The hight of the gap between top and bottom part of the pilon
+        /// The hight of the gap between top and bottom part of the pylon
         float gapHeight;
     };
 
-    /// Each pilon in the level
-    std::vector<Pilon> pilons;
+    /// Each pylon in the level
+    std::vector<Pylon> pylons;
 };
 
 /// Expected number of decisions is (level.width / (HORIZONTAL_VELOCITY * FPS))
