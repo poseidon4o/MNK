@@ -191,11 +191,12 @@ public:
 			minNodePtr->right = n->right;
 			// assign the ref
 			n = minNode;
-			nullN = false;
 		}
 
 		delete toDelete;
-		n = nullN ? nullptr : n;
+		if (nullN) {
+			n = nullptr;
+		}
 
 		return true;
 	}
