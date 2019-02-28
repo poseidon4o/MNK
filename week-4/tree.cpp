@@ -2,11 +2,13 @@
 #include <cassert>
 #include <utility>
 #include <tuple>
+#include <vector>
+#include <random>
 
 
 /// Recursive implementation of non-balanced binary search tree
 /// Does not allow duplicate values and the value type must provide operator<
-/// @tparam T - the type of the contained elements, must provide operator<, copy ctor, default ctor, operator=
+/// @tparam T - the type of the contained elements, must provide operator<, copy ctor, default ctor, operator=, operator==
 template <typename T>
 class BSTree {
 	struct Node {
@@ -30,7 +32,7 @@ class BSTree {
 		}
 
 		// recurse into chosen subtree
-		if (value < n->value) {
+		if (value < n->data) {
 			return find(n->left, value);
 		} else {
 			return find(n->right, value);
@@ -130,6 +132,12 @@ public:
 		return size() == 0;
 	}
 
+	/// Remove all elements from the tree
+	void clear() {
+		count = 0;
+		clear(root);
+	}
+
 	/// Try to insert the value if not yet inserted
 	/// @param value - the value to insert
 	/// @return - true if inserted, false otherwise
@@ -192,3 +200,29 @@ public:
 		return true;
 	}
 };
+
+
+int main() {
+	BSTree<int> tree;
+
+	const int count = 1000;
+	std::vector<int> numbers;
+	numbers.reserve(count);
+
+	std::mt19937 randGen(42);
+	const int numCap = count * 10;
+	for (int c = 0; c < count; c++) {
+		const int number = randGen() % numCap;
+		numbers.push_back(number);
+		tree.insert(number);
+	}
+
+	for (int n : numbers) {
+		assert(tree.find(n) == true && "Missing number in tree");
+	}
+
+	tree.clear();
+	assert(tree.empty() && "Tree not empty after clear");
+
+	return 0;
+}
