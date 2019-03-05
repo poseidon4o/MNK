@@ -29,5 +29,5 @@ struct LevelDescription {
     std::vector<Pylon> pylons;
 };
 
-/// Expected number of decisions is (level.width / (HORIZONTAL_VELOCITY * FPS))
+/// Expected number of decisions is (level.width / HORIZONTAL_VELOCITY)
 std::vector<bool> getAgentDecisions(const LevelDescription &level);
